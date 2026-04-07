@@ -1,250 +1,104 @@
-import { useState, useEffect, useRef } from "react";
-
-const skills = [
-  { icon: "📊", title: "Data Analysis & SQL", desc: "Querying, cleaning, and analysing large-scale datasets to surface trends, anomalies, and actionable patterns.", tags: ["MySQL", "SQL", "Pandas", "NumPy"] },
-  { icon: "📈", title: "Visualisation & BI", desc: "Designing interactive dashboards and automated reports that drive faster, data-backed decision-making.", tags: ["Power BI", "DAX", "Excel", "Streamlit"] },
-  { icon: "⚙️", title: "ETL & Data Processing", desc: "Building reliable data pipelines, automating extraction workflows, and enforcing quality standards.", tags: ["Power Query", "Python", "ETL", "Data Quality"] },
-  { icon: "🤖", title: "AI & NLP", desc: "Applying NLP, embeddings, and RAG pipelines to build intelligent systems and recommendation engines.", tags: ["NLP", "RAG", "OpenAI API", "Embeddings"] },
-  { icon: "🛠️", title: "Tools & Platforms", desc: "Comfortable across analytical and development environments to build, test, and deliver data solutions.", tags: ["Python", "Excel", "Power BI", "VS Code"] },
-  { icon: "🤝", title: "Business & Communication", desc: "Translating technical findings into clear narratives for leadership, with KPI design and requirements gathering.", tags: ["KPI Design", "Stakeholders", "Reporting", "Agile"] },
-];
-
-const experience = [
-  { date: "Jan 2026 — Present", title: "Academic Tutor — COMP3900", company: "UNSW Sydney", desc: "Mentoring student teams on capstone software projects covering system design, agile methodologies, and full-stack development.", metrics: [] },
-  { date: "Sep 2025 — Jan 2026", title: "Research Assistant (Data Analytics)", company: "UNSW Sydney", desc: "Analysed 1,000+ student records to identify skill gaps and matching patterns, improving allocation accuracy through semantic analysis.", metrics: ["↑ 65% match relevance", "↓ 75% manual allocation"] },
-  { date: "Jul 2024 — Nov 2025", title: "Data Analyst", company: "Delcomanz", desc: "Analysed 10,000+ rows monthly using SQL and Power BI. Automated KPI dashboards, standardised data collection across 3 departments.", metrics: ["$50K+ revenue identified", "↓ 60% reporting errors", "5hrs/week saved"] },
-  { date: "Apr 2025 — Jul 2025", title: "AI & Data Consultant", company: "Cavari", desc: "Supported clients with reporting tools, data workflows, and system troubleshooting across Windows and cloud-based BI tools.", metrics: [] },
-  { date: "Aug 2024 — Jan 2025", title: "Data Analyst Intern", company: "upGrad GSP", desc: "Built dashboards and reports in Power BI, conducted data quality audits, and supported analytics with SQL querying.", metrics: [] },
-];
-
-const projects = [
-  { label: "Data Analysis · EDA", title: "Australian Job Market Analysis", desc: "Exploratory data analysis of Australian job postings, uncovering in-demand skills, salary distributions by city, and hiring trends across tech and analytics.", tech: ["Python", "Pandas", "Matplotlib", "MySQL", "Jupyter"], color: "#4fd1c5" },
-  { label: "Business Intelligence", title: "Automated KPI Dashboards", desc: "Designed and automated weekly Power BI dashboards across 3 departments at Delcomanz, reducing manual reporting by 5 hours weekly.", tech: ["Power BI", "DAX", "SQL", "Python", "Excel"], color: "#63b3ed" },
-  { label: "Research Project", title: "ProjectMatch / TeamUp", desc: "AI-powered student-project matching using NLP skill extraction, vector embeddings, and RAG. 65% improvement in match relevance.", tech: ["Python", "NLP", "Supabase", "pgvector", "Embeddings"], color: "#4fd1c5" },
-  { label: "Published · AAEE 2025", title: "InterVuAI", desc: "AI interview preparation platform with real-time feedback on responses, speech patterns, and sentiment. 40% higher engagement.", tech: ["GPT-4", "Speech API", "NLP", "Python", "Sentiment"], color: "#b794f4" },
-];
-
-const publications = [
-  { title: "InterVuAI: An AI-Powered Interview Preparation Platform", venue: "AAEE 2025 — Australasian Association for Engineering Education", authors: "Dhruv Gulwani, Dr. Sonit Singh, Dr. Basem Suleiman", desc: "AI-driven interview system integrating GPT-4, speech analysis, and adaptive questioning for personalised feedback." },
-  { title: "TeamUp: Semantic Project Matching and Team Formation for Learning at Scale", venue: "Under Review — ACM Learning at Scale (L@S) 2026", authors: "Dhruv Gulwani, Dr. Sonit Singh, Dr. Basem Suleiman", desc: "NLP-based system for matching students to projects using embeddings, RAG, and compatibility scoring." },
-];
-
-function Reveal({ children, className = "" }) {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } }, { threshold: 0.1 });
-    if (ref.current) obs.observe(ref.current);
-    return () => obs.disconnect();
-  }, []);
-  return <div ref={ref} className={className} style={{ opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(30px)", transition: "opacity 0.7s ease, transform 0.7s ease" }}>{children}</div>;
-}
-
-export default function Portfolio() {
-  const [scrolled, setScrolled] = useState(false);
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 80);
-    window.addEventListener("scroll", fn);
-    return () => window.removeEventListener("scroll", fn);
-  }, []);
-
-  return (
-    <div style={{ fontFamily: "'Outfit', system-ui, sans-serif", background: "#0a0a0f", color: "#e8e8ed", minHeight: "100vh", lineHeight: 1.6 }}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        a { text-decoration: none; }
-        .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; padding: 3px 8px; border-radius: 4px; background: rgba(79,209,197,0.08); color: #4fd1c5; border: 1px solid rgba(79,209,197,0.15); }
-        .tech-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.66rem; padding: 2px 7px; border-radius: 4px; background: rgba(99,179,237,0.08); color: #63b3ed; border: 1px solid rgba(99,179,237,0.15); }
-        .metric-tag { font-size: 0.78rem; color: #4fd1c5; background: rgba(79,209,197,0.15); padding: 4px 10px; border-radius: 6px; font-weight: 500; }
-        .card { background: #111118; border: 1px solid #1e1e2a; border-radius: 12px; transition: all 0.3s ease; }
-        .card:hover { border-color: #2a9d8f; background: #16161f; transform: translateY(-3px); }
-        .nav-link { color: #8b8b9e; font-size: 0.82rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; transition: color 0.3s; cursor: pointer; }
-        .nav-link:hover { color: #4fd1c5; }
-        .btn-primary { padding: 12px 28px; border-radius: 8px; background: #4fd1c5; color: #0a0a0f; font-weight: 600; font-size: 0.9rem; border: none; cursor: pointer; transition: all 0.3s; }
-        .btn-primary:hover { background: #5ee0d4; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(79,209,197,0.3); }
-        .btn-outline { padding: 12px 28px; border-radius: 8px; background: transparent; color: #e8e8ed; font-size: 0.9rem; border: 1px solid #1e1e2a; cursor: pointer; transition: all 0.3s; }
-        .btn-outline:hover { border-color: #4fd1c5; color: #4fd1c5; transform: translateY(-2px); }
-      `}</style>
-
-      {/* Nav */}
-      <nav style={{ position: "fixed", top: 0, width: "100%", zIndex: 1000, padding: "14px 28px", display: "flex", justifyContent: "space-between", alignItems: "center", backdropFilter: "blur(20px)", background: scrolled ? "rgba(10,10,15,0.92)" : "rgba(10,10,15,0.7)", borderBottom: "1px solid #1e1e2a", transition: "background 0.3s" }}>
-        <span style={{ fontFamily: "'DM Serif Display', serif", fontSize: "1.3rem", color: "#4fd1c5" }}>DG.</span>
-        <div style={{ display: "flex", gap: 24 }}>
-          {["Skills", "Experience", "Projects", "Research", "Contact"].map(s => (
-            <a key={s} href={`#${s.toLowerCase()}`} className="nav-link">{s}</a>
-          ))}
-        </div>
-      </nav>
-
-      {/* Hero */}
-      <section style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", position: "relative", padding: "80px 24px 48px", textAlign: "center", overflow: "hidden" }}>
-        <div style={{ position: "absolute", inset: 0, zIndex: 0 }}>
-          <div style={{ position: "absolute", width: 500, height: 500, borderRadius: "50%", background: "rgba(79,209,197,0.08)", filter: "blur(100px)", top: "10%", left: "-5%" }} />
-          <div style={{ position: "absolute", width: 400, height: 400, borderRadius: "50%", background: "rgba(99,179,237,0.06)", filter: "blur(100px)", bottom: "10%", right: "-5%" }} />
-          <div style={{ position: "absolute", width: 300, height: 300, borderRadius: "50%", background: "rgba(183,148,244,0.05)", filter: "blur(100px)", top: "50%", left: "50%" }} />
-        </div>
-        <div style={{ position: "relative", zIndex: 1, maxWidth: 900 }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "6px 16px", border: "1px solid #1e1e2a", borderRadius: 100, fontSize: "0.8rem", color: "#4fd1c5", marginBottom: 24, background: "rgba(79,209,197,0.15)" }}>
-            <span style={{ width: 6, height: 6, background: "#4fd1c5", borderRadius: "50%", animation: "pulse 2s ease-in-out infinite" }} />
-            Open to opportunities
-          </div>
-          <h1 style={{ fontFamily: "'DM Serif Display', serif", fontSize: "clamp(2.8rem, 7vw, 5.5rem)", fontWeight: 400, lineHeight: 1.1, marginBottom: 20 }}>
-            Dhruv <span style={{ background: "linear-gradient(135deg, #4fd1c5, #63b3ed, #b794f4)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Gulwani</span>
-          </h1>
-          <p style={{ fontSize: "1.15rem", color: "#8b8b9e", maxWidth: 600, margin: "0 auto 32px", fontWeight: 300, lineHeight: 1.7 }}>
-            Data Analyst and BI Developer with a knack for turning messy datasets into crisp, actionable insights. UNSW Computer Engineering graduate. Python, SQL and Power BI.
-          </p>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            <a href="#contact"><button className="btn-primary">Get in Touch</button></a>
-            <a href="#projects"><button className="btn-outline">View Projects</button></a>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 1, background: "#1e1e2a", borderTop: "1px solid #1e1e2a", borderBottom: "1px solid #1e1e2a" }}>
-        {[{ n: "60%", l: "Error Reduction" }, { n: "$50K+", l: "Revenue Identified" }, { n: "5hrs", l: "Weekly Time Saved" }, { n: "2", l: "Published Papers" }].map(s => (
-          <Reveal key={s.l}>
-            <div style={{ background: "#0a0a0f", padding: "32px 20px", textAlign: "center" }}>
-              <div style={{ fontFamily: "'DM Serif Display', serif", fontSize: "2.2rem", color: "#4fd1c5", marginBottom: 4 }}>{s.n}</div>
-              <div style={{ fontSize: "0.75rem", color: "#5a5a6e", textTransform: "uppercase", letterSpacing: 1.5, fontWeight: 500 }}>{s.l}</div>
-            </div>
-          </Reveal>
-        ))}
-      </div>
-
-      {/* Skills */}
-      <section id="skills" style={{ padding: "80px 24px", maxWidth: 1200, margin: "0 auto" }}>
-        <Reveal><p style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: 3, color: "#4fd1c5", fontWeight: 600, marginBottom: 10 }}>Expertise</p></Reveal>
-        <Reveal><h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: "clamp(2rem, 4vw, 3rem)", marginBottom: 10 }}>Technical Toolkit</h2></Reveal>
-        <Reveal><p style={{ color: "#8b8b9e", fontSize: "1.05rem", maxWidth: 600, marginBottom: 36, fontWeight: 300 }}>End-to-end analytics capability, from raw data wrangling to executive dashboards.</p></Reveal>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 18 }}>
-          {skills.map(s => (
-            <Reveal key={s.title}>
-              <div className="card" style={{ padding: 24 }}>
-                <div style={{ width: 44, height: 44, borderRadius: 10, background: "rgba(79,209,197,0.15)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 14, fontSize: "1.3rem" }}>{s.icon}</div>
-                <h3 style={{ fontSize: "1.05rem", fontWeight: 600, marginBottom: 6 }}>{s.title}</h3>
-                <p style={{ color: "#8b8b9e", fontSize: "0.86rem", lineHeight: 1.6, fontWeight: 300 }}>{s.desc}</p>
-                <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginTop: 12 }}>
-                  {s.tags.map(t => <span key={t} className="tag">{t}</span>)}
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* Experience */}
-      <section id="experience" style={{ padding: "80px 24px", maxWidth: 1200, margin: "0 auto" }}>
-        <Reveal><p style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: 3, color: "#4fd1c5", fontWeight: 600, marginBottom: 10 }}>Career</p></Reveal>
-        <Reveal><h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: "clamp(2rem, 4vw, 3rem)", marginBottom: 10 }}>Experience</h2></Reveal>
-        <Reveal><p style={{ color: "#8b8b9e", fontSize: "1.05rem", maxWidth: 600, marginBottom: 36, fontWeight: 300 }}>A track record of delivering measurable impact through data.</p></Reveal>
-        <div style={{ position: "relative", paddingLeft: 28 }}>
-          <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 1, background: "linear-gradient(to bottom, #4fd1c5, #1e1e2a)" }} />
-          {experience.map((e, i) => (
-            <Reveal key={i}>
-              <div style={{ position: "relative", paddingLeft: 32, paddingBottom: i === experience.length - 1 ? 0 : 40 }}>
-                <div style={{ position: "absolute", left: -33, top: 4, width: 10, height: 10, borderRadius: "50%", background: "#4fd1c5", boxShadow: "0 0 0 4px #0a0a0f, 0 0 0 5px #2a9d8f" }} />
-                <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: "0.75rem", color: "#4fd1c5", marginBottom: 6 }}>{e.date}</div>
-                <div style={{ fontSize: "1.2rem", fontWeight: 600, marginBottom: 2 }}>{e.title}</div>
-                <div style={{ color: "#8b8b9e", fontSize: "0.9rem", marginBottom: 8, fontWeight: 300 }}>{e.company}</div>
-                <div style={{ color: "#8b8b9e", fontSize: "0.86rem", lineHeight: 1.7, fontWeight: 300 }}>{e.desc}</div>
-                {e.metrics.length > 0 && (
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 12 }}>
-                    {e.metrics.map(m => <span key={m} className="metric-tag">{m}</span>)}
-                  </div>
-                )}
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* Projects */}
-      <section id="projects" style={{ padding: "80px 24px", maxWidth: 1200, margin: "0 auto" }}>
-        <Reveal><p style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: 3, color: "#4fd1c5", fontWeight: 600, marginBottom: 10 }}>Portfolio</p></Reveal>
-        <Reveal><h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: "clamp(2rem, 4vw, 3rem)", marginBottom: 10 }}>Featured Projects</h2></Reveal>
-        <Reveal><p style={{ color: "#8b8b9e", fontSize: "1.05rem", maxWidth: 600, marginBottom: 36, fontWeight: 300 }}>Research-backed systems and hands-on analysis solving real problems with data.</p></Reveal>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 18 }}>
-          {projects.map(p => (
-            <Reveal key={p.title}>
-              <div className="card" style={{ overflow: "hidden" }}>
-                <div style={{ height: 140, background: `linear-gradient(135deg, ${p.color}15, ${p.color}05)`, display: "flex", alignItems: "center", justifyContent: "center", borderBottom: `1px solid ${p.color}20` }}>
-                  <span style={{ fontFamily: "'DM Serif Display', serif", fontSize: "2rem", color: `${p.color}30` }}>{p.title.split(" ")[0]}</span>
-                </div>
-                <div style={{ padding: 22 }}>
-                  <div style={{ fontSize: "0.68rem", textTransform: "uppercase", letterSpacing: 2, color: "#4fd1c5", fontWeight: 600, marginBottom: 6 }}>{p.label}</div>
-                  <h3 style={{ fontFamily: "'DM Serif Display', serif", fontSize: "1.3rem", marginBottom: 8 }}>{p.title}</h3>
-                  <p style={{ color: "#8b8b9e", fontSize: "0.86rem", lineHeight: 1.7, fontWeight: 300, marginBottom: 12 }}>{p.desc}</p>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                    {p.tech.map(t => <span key={t} className="tech-tag">{t}</span>)}
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      {/* Publications */}
-      <section id="research" style={{ padding: "80px 24px", maxWidth: 1200, margin: "0 auto" }}>
-        <Reveal><p style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: 3, color: "#4fd1c5", fontWeight: 600, marginBottom: 10 }}>Research</p></Reveal>
-        <Reveal><h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: "clamp(2rem, 4vw, 3rem)", marginBottom: 10 }}>Publications</h2></Reveal>
-        <Reveal><p style={{ color: "#8b8b9e", fontSize: "1.05rem", maxWidth: 600, marginBottom: 36, fontWeight: 300 }}>Peer-reviewed work at the intersection of AI, data, and education.</p></Reveal>
-        {publications.map(p => (
-          <Reveal key={p.title}>
-            <div className="card" style={{ padding: 24, marginBottom: 14, display: "flex", gap: 18, alignItems: "flex-start" }}>
-              <div style={{ width: 48, height: 48, borderRadius: 10, background: "rgba(79,209,197,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, fontSize: "1.2rem" }}>📄</div>
-              <div>
-                <h3 style={{ fontSize: "1.02rem", fontWeight: 600, marginBottom: 4 }}>{p.title}</h3>
-                <div style={{ fontSize: "0.8rem", color: "#4fd1c5", marginBottom: 4, fontWeight: 500 }}>{p.venue}</div>
-                <div style={{ fontSize: "0.8rem", color: "#5a5a6e", marginBottom: 6 }}>{p.authors}</div>
-                <p style={{ fontSize: "0.84rem", color: "#8b8b9e", lineHeight: 1.6, fontWeight: 300 }}>{p.desc}</p>
-              </div>
-            </div>
-          </Reveal>
-        ))}
-      </section>
-
-      {/* Education */}
-      <section style={{ padding: "80px 24px", maxWidth: 1200, margin: "0 auto" }}>
-        <Reveal><p style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: 3, color: "#4fd1c5", fontWeight: 600, marginBottom: 10 }}>Credentials</p></Reveal>
-        <Reveal><h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: "clamp(2rem, 4vw, 3rem)", marginBottom: 24 }}>Education</h2></Reveal>
-        <Reveal>
-          <div className="card" style={{ padding: "18px 24px", display: "flex", alignItems: "center", gap: 18 }}>
-            <div style={{ width: 52, height: 52, borderRadius: 12, background: "linear-gradient(135deg, rgba(79,209,197,0.15), rgba(99,179,237,0.1))", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.5rem", flexShrink: 0 }}>🎓</div>
-            <div>
-              <h3 style={{ fontSize: "1rem", fontWeight: 600, marginBottom: 2 }}>Bachelor of Computer Engineering (Honours)</h3>
-              <p style={{ fontSize: "0.82rem", color: "#8b8b9e", fontWeight: 300 }}>University of New South Wales · 2021 to 2025</p>
-            </div>
-          </div>
-        </Reveal>
-      </section>
-
-      {/* Contact */}
-      <section id="contact" style={{ padding: "100px 24px", textAlign: "center", maxWidth: 1200, margin: "0 auto" }}>
-        <Reveal><p style={{ fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: 3, color: "#4fd1c5", fontWeight: 600, marginBottom: 10 }}>Let's Connect</p></Reveal>
-        <Reveal><h2 style={{ fontFamily: "'DM Serif Display', serif", fontSize: "clamp(2rem, 4vw, 3rem)", marginBottom: 10 }}>Ready to chat about data?</h2></Reveal>
-        <Reveal><p style={{ color: "#8b8b9e", fontSize: "1.05rem", maxWidth: 600, margin: "0 auto 36px", fontWeight: 300 }}>Open to data analyst, BI developer, and business analyst opportunities across Sydney and beyond.</p></Reveal>
-        <Reveal>
-          <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
-            {[
-              { label: "dhruvgulwani@gmail.com", href: "mailto:dhruvgulwani@gmail.com" },
-              { label: "0411 930 283", href: "tel:+61411930283" },
-              { label: "LinkedIn", href: "https://linkedin.com/in/dhruv-gulwani-b12109238" },
-              { label: "GitHub", href: "https://github.com/dhruv-2013" },
-            ].map(c => (
-              <a key={c.label} href={c.href} target={c.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", padding: "10px 20px", border: "1px solid #1e1e2a", borderRadius: 10, color: "#e8e8ed", fontSize: "0.86rem", background: "#111118", transition: "all 0.3s" }}>{c.label}</a>
-            ))}
-          </div>
-        </Reveal>
-      </section>
-
-      <footer style={{ textAlign: "center", padding: 24, borderTop: "1px solid #1e1e2a", color: "#5a5a6e", fontSize: "0.78rem" }}>
-        Dhruv Gulwani · Sydney, Australia · 2026
-      </footer>
-    </div>
-  );
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dhruv Gulwani - Data Analyst</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0f;--card:#111118;--accent:#4fd1c5;--accent2:#63b3ed;--accent3:#b794f4;--text:#e8e8ed;--dim:#8b8b9e;--muted:#5a5a6e;--border:#1e1e2a;--glow:rgba(79,209,197,.15)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+nav{position:fixed;top:0;width:100%;z-index:1000;padding:14px 28px;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(20px);background:rgba(10,10,15,.7);border-bottom:1px solid var(--border)}
+.logo{font-family:'DM Serif Display',serif;font-size:1.3rem;color:var(--accent)}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{color:var(--dim);font-size:.82rem;font-weight:500;letter-spacing:1px;text-transform:uppercase;transition:color .3s}
+.nav-links a:hover{color:var(--accent)}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;padding:80px 24px 48px;text-align:center;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(100px)}
+.o1{width:500px;height:500px;background:rgba(79,209,197,.08);top:10%;left:-5%}
+.o2{width:400px;height:400px;background:rgba(99,179,237,.06);bottom:10%;right:-5%}
+.o3{width:300px;height:300px;background:rgba(183,148,244,.05);top:50%;left:50%}
+.hero-c{position:relative;z-index:1;max-width:900px}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border:1px solid var(--border);border-radius:100px;font-size:.8rem;color:var(--accent);margin-bottom:24px;background:var(--glow)}
+.badge .dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+h1{font-family:'DM Serif Display',serif;font-size:clamp(2.8rem,7vw,5.5rem);font-weight:400;line-height:1.1;margin-bottom:20px}
+.grad{background:linear-gradient(135deg,var(--accent),var(--accent2),var(--accent3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{font-size:1.15rem;color:var(--dim);max-width:600px;margin:0 auto 32px;font-weight:300;line-height:1.7}
+.btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.bp{padding:12px 28px;border-radius:8px;background:var(--accent);color:var(--bg);font-weight:600;font-size:.9rem;border:none;cursor:pointer;transition:all .3s}
+.bp:hover{background:#5ee0d4;transform:translateY(-2px);box-shadow:0 8px 30px rgba(79,209,197,.3)}
+.bo{padding:12px 28px;border-radius:8px;background:transparent;color:var(--text);font-size:.9rem;border:1px solid var(--border);cursor:pointer;transition:all .3s}
+.bo:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.st{background:var(--bg);padding:32px 20px;text-align:center}
+.st-n{font-family:'DM Serif Display',serif;font-size:2.2rem;color:var(--accent);margin-bottom:4px}
+.st-l{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;font-weight:500}
+section{padding:80px 24px;max-width:1200px;margin:0 auto}
+.sl{font-size:.75rem;text-transform:uppercase;letter-spacing:3px;color:var(--accent);font-weight:600;margin-bottom:10px}
+.st2{font-family:'DM Serif Display',serif;font-size:clamp(2rem,4vw,3rem);margin-bottom:10px}
+.sd{color:var(--dim);font-size:1.05rem;max-width:600px;margin-bottom:36px;font-weight:300}
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;transition:all .4s;position:relative;overflow:hidden}
+.sc:hover{border-color:#2a9d8f;background:#16161f;transform:translateY(-4px)}
+.si{width:44px;height:44px;border-radius:10px;background:var(--glow);display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:1.3rem}
+.sc h3{font-size:1.05rem;font-weight:600;margin-bottom:6px}
+.sc p{color:var(--dim);font-size:.86rem;line-height:1.6;font-weight:300}
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}
+.tag{font-family:'JetBrains Mono',monospace;font-size:.68rem;padding:3px 8px;border-radius:4px;background:rgba(79,209,197,.08);color:var(--accent);border:1px solid rgba(79,209,197,.15)}
+.tl{position:relative;padding-left:28px}
+.tl::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--accent),var(--border))}
+.ti{position:relative;padding:0 0 40px 32px}
+.ti:last-child{padding-bottom:0}
+.td{position:absolute;left:-33px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--bg),0 0 0 5px #2a9d8f}
+.tdate{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);margin-bottom:6px}
+.ttl{font-size:1.2rem;font-weight:600;margin-bottom:2px}
+.tco{color:var(--dim);font-size:.9rem;margin-bottom:8px;font-weight:300}
+.tds{color:var(--dim);font-size:.86rem;line-height:1.7;font-weight:300}
+.ms{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.mt{font-size:.78rem;color:var(--accent);background:var(--glow);padding:4px 10px;border-radius:6px;font-weight:500}
+.pg{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.pc{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:all .4s}
+.pc:hover{border-color:#2a9d8f;transform:translateY(-5px);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.pv{height:140px;display:flex;align-items:center;justify-content:center}
+.pb{padding:22px}
+.pl{font-size:.68rem;text-transform:uppercase;letter-spacing:2px;color:var(--accent);font-weight:600;margin-bottom:6px}
+.pc h3{font-family:'DM Serif Display',serif;font-size:1.3rem;margin-bottom:8px}
+.pc p{color:var(--dim);font-size:.86rem;line-height:1.7;font-weight:300;margin-bottom:12px}
+.tt{display:flex;flex-wrap:wrap;gap:5px}
+.tt span{font-family:'JetBrains Mono',monospace;font-size:.66rem;padding:2px 7px;border-radius:4px;background:rgba(99,179,237,.08);color:var(--accent2);border:1px solid rgba(99,179,237,.15)}
+.pub{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:14px;display:flex;gap:18px;align-items:flex-start;transition:all .3s}
+.pub:hover{border-color:#2a9d8f;background:#16161f}
+.pi{width:48px;height:48px;border-radius:10px;background:var(--glow);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.2rem}
+.pub h3{font-size:1.02rem;font-weight:600;margin-bottom:4px}
+.pve{font-size:.8rem;color:var(--accent);margin-bottom:4px;font-weight:500}
+.pau{font-size:.8rem;color:var(--muted);margin-bottom:6px}
+.pde{font-size:.84rem;color:var(--dim);line-height:1.6;font-weight:300}
+.ed{display:flex;align-items:center;gap:18px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 24px}
+.eb{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--glow),rgba(99,179,237,.1));display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0}
+.ed h3{font-size:1rem;font-weight:600;margin-bottom:2px}
+.ed p{font-size:.82rem;color:var(--dim);font-weight:300}
+.ct{text-align:center;padding:100px 24px}
+.cl{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.cl a{display:flex;align-items:center;padding:10px 20px;border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:.86rem;background:var(--card);transition:all .3s}
+.cl a:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+footer{text-align:center;padding:24px;border-top:1px solid var(--border);color:var(--muted);font-size:.78rem}
+@media(max-width:768px){.nav-links{display:none}.stats{grid-template-columns:repeat(2,1fr)}.pg{grid-template-columns:1fr}.pub{flex-direction:column}.ed{flex-direction:column;text-align:center}section{padding:48px 18px}}
+</style>
+</head>
+<body>
+<nav><a href="#" class="logo">DG.</a><ul class="nav-links"><li><a href="#skills">Skills</a></li><li><a href="#exp">Experience</a></li><li><a href="#proj">Projects</a></li><li><a href="#research">Research</a></li><li><a href="#contact">Contact</a></li></ul></nav>
+<section class="hero"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="hero-c"><div class="badge"><span class="dot"></span>Open to opportunities</div><h1>Dhruv <span class="grad">Gulwani</span></h1><p class="sub">Data Analyst and BI Developer with a knack for turning messy datasets into crisp, actionable insights. UNSW Computer Engineering graduate. Python, SQL and Power BI.</p><div class="btns"><a href="#contact"><button class="bp">Get in Touch</button></a><a href="#proj"><button class="bo">View Projects</button></a></div></div></section>
+<div class="stats"><div class="st"><div class="st-n">60%</div><div class="st-l">Error Reduction</div></div><div class="st"><div class="st-n">$50K+</div><div class="st-l">Revenue Identified</div></div><div class="st"><div class="st-n">5hrs</div><div class="st-l">Weekly Time Saved</div></div><div class="st"><div class="st-n">2</div><div class="st-l">Published Papers</div></div></div>
+<section id="skills"><p class="sl">Expertise</p><h2 class="st2">Technical Toolkit</h2><p class="sd">End-to-end analytics capability, from raw data wrangling to executive dashboards.</p><div class="sg"><div class="sc"><div class="si">📊</div><h3>Data Analysis & SQL</h3><p>Querying, cleaning, and analysing large-scale datasets to surface trends, anomalies, and actionable patterns.</p><div class="tags"><span class="tag">MySQL</span><span class="tag">SQL</span><span class="tag">Pandas</span><span class="tag">NumPy</span></div></div><div class="sc"><div class="si">📈</div><h3>Visualisation & BI</h3><p>Designing interactive dashboards and automated reports that drive faster, data-backed decision-making.</p><div class="tags"><span class="tag">Power BI</span><span class="tag">DAX</span><span class="tag">Excel</span><span class="tag">Streamlit</span></div></div><div class="sc"><div class="si">⚙️</div><h3>ETL & Data Processing</h3><p>Building reliable data pipelines, automating extraction workflows, and enforcing quality standards.</p><div class="tags"><span class="tag">Power Query</span><span class="tag">Python</span><span class="tag">ETL</span><span class="tag">Data Quality</span></div></div><div class="sc"><div class="si">🤖</div><h3>AI & NLP</h3><p>Applying NLP, embeddings, and RAG pipelines to build intelligent systems and recommendation engines.</p><div class="tags"><span class="tag">NLP</span><span class="tag">RAG</span><span class="tag">OpenAI API</span><span class="tag">Embeddings</span></div></div><div class="sc"><div class="si">🛠️</div><h3>Tools & Platforms</h3><p>Comfortable across analytical and development environments to build, test, and deliver data solutions.</p><div class="tags"><span class="tag">Python</span><span class="tag">Excel</span><span class="tag">Power BI</span><span class="tag">VS Code</span></div></div><div class="sc"><div class="si">🤝</div><h3>Business & Communication</h3><p>Translating technical findings into clear narratives for leadership, with KPI design and requirements gathering.</p><div class="tags"><span class="tag">KPI Design</span><span class="tag">Stakeholders</span><span class="tag">Reporting</span><span class="tag">Agile</span></div></div></div></section>
+<section id="exp"><p class="sl">Career</p><h2 class="st2">Experience</h2><p class="sd">A track record of delivering measurable impact through data.</p><div class="tl"><div class="ti"><div class="td"></div><div class="tdate">Jan 2026 — Present</div><div class="ttl">Academic Tutor — COMP3900</div><div class="tco">UNSW Sydney</div><div class="tds">Mentoring student teams on capstone software projects covering system design, agile methodologies, and full-stack development.</div></div><div class="ti"><div class="td"></div><div class="tdate">Sep 2025 — Jan 2026</div><div class="ttl">Research Assistant (Data Analytics)</div><div class="tco">UNSW Sydney</div><div class="tds">Analysed 1,000+ student records to identify skill gaps and matching patterns, improving allocation accuracy through semantic analysis.</div><div class="ms"><span class="mt">↑ 65% match relevance</span><span class="mt">↓ 75% manual allocation</span></div></div><div class="ti"><div class="td"></div><div class="tdate">Jul 2024 — Nov 2025</div><div class="ttl">Data Analyst</div><div class="tco">Delcomanz</div><div class="tds">Analysed 10,000+ rows monthly using SQL and Power BI. Automated KPI dashboards, standardised data collection across 3 departments.</div><div class="ms"><span class="mt">$50K+ revenue identified</span><span class="mt">↓ 60% reporting errors</span><span class="mt">5hrs/week saved</span></div></div><div class="ti"><div class="td"></div><div class="tdate">Apr 2025 — Jul 2025</div><div class="ttl">AI & Data Consultant</div><div class="tco">Cavari</div><div class="tds">Supported clients with reporting tools, data workflows, and system troubleshooting across Windows and cloud-based BI tools.</div></div><div class="ti"><div class="td"></div><div class="tdate">Aug 2024 — Jan 2025</div><div class="ttl">Data Analyst Intern</div><div class="tco">upGrad GSP</div><div class="tds">Built dashboards and reports in Power BI, conducted data quality audits, and supported analytics with SQL querying.</div></div></div></section>
+<section id="proj"><p class="sl">Portfolio</p><h2 class="st2">Featured Projects</h2><p class="sd">Research-backed systems and hands-on analysis solving real problems with data.</p><div class="pg"><div class="pc"><div class="pv" style="background:linear-gradient(135deg,rgba(79,209,197,.12),rgba(79,209,197,.03))"><span style="font-family:'DM Serif Display',serif;font-size:2rem;color:rgba(79,209,197,.25)">AU Data</span></div><div class="pb"><div class="pl">Data Analysis - EDA</div><h3>Australian Job Market Analysis</h3><p>Exploratory data analysis of Australian job postings, uncovering in-demand skills, salary distributions by city, and hiring trends across tech and analytics.</p><div class="tt"><span>Python</span><span>Pandas</span><span>Matplotlib</span><span>MySQL</span><span>Jupyter</span></div></div></div><div class="pc"><div class="pv" style="background:linear-gradient(135deg,rgba(99,179,237,.12),rgba(99,179,237,.03))"><span style="font-family:'DM Serif Display',serif;font-size:2rem;color:rgba(99,179,237,.25)">KPI</span></div><div class="pb"><div class="pl">Business Intelligence</div><h3>Automated KPI Dashboards</h3><p>Designed and automated weekly Power BI dashboards across 3 departments at Delcomanz, reducing manual reporting by 5 hours weekly.</p><div class="tt"><span>Power BI</span><span>DAX</span><span>SQL</span><span>Python</span><span>Excel</span></div></div></div><div class="pc"><div class="pv" style="background:linear-gradient(135deg,rgba(79,209,197,.12),rgba(79,209,197,.03))"><span style="font-family:'DM Serif Display',serif;font-size:2rem;color:rgba(79,209,197,.25)">TeamUp</span></div><div class="pb"><div class="pl">Research Project</div><h3>ProjectMatch / TeamUp</h3><p>AI-powered student-project matching using NLP skill extraction, vector embeddings, and RAG. 65% improvement in match relevance.</p><div class="tt"><span>Python</span><span>NLP</span><span>Supabase</span><span>pgvector</span><span>Embeddings</span></div></div></div><div class="pc"><div class="pv" style="background:linear-gradient(135deg,rgba(183,148,244,.12),rgba(183,148,244,.03))"><span style="font-family:'DM Serif Display',serif;font-size:2rem;color:rgba(183,148,244,.25)">InterVu</span></div><div class="pb"><div class="pl">Published - AAEE 2025</div><h3>InterVuAI</h3><p>AI interview preparation platform with real-time feedback on responses, speech patterns, and sentiment. 40% higher engagement.</p><div class="tt"><span>GPT-4</span><span>Speech API</span><span>NLP</span><span>Python</span><span>Sentiment</span></div></div></div></div></section>
+<section id="research"><p class="sl">Research</p><h2 class="st2">Publications</h2><p class="sd">Peer-reviewed work at the intersection of AI, data, and education.</p><div class="pub"><div class="pi">📄</div><div><h3>InterVuAI: An AI-Powered Interview Preparation Platform</h3><div class="pve">AAEE 2025 — Australasian Association for Engineering Education</div><div class="pau">Dhruv Gulwani, Dr. Sonit Singh, Dr. Basem Suleiman</div><p class="pde">AI-driven interview system integrating GPT-4, speech analysis, and adaptive questioning for personalised feedback.</p></div></div><div class="pub"><div class="pi">📄</div><div><h3>TeamUp: Semantic Project Matching and Team Formation for Learning at Scale</h3><div class="pve">Under Review — ACM Learning at Scale (L@S) 2026</div><div class="pau">Dhruv Gulwani, Dr. Sonit Singh, Dr. Basem Suleiman</div><p class="pde">NLP-based system for matching students to projects using embeddings, RAG, and compatibility scoring.</p></div></div></section>
+<section><p class="sl">Credentials</p><h2 class="st2">Education</h2><div class="ed" style="margin-top:24px"><div class="eb">🎓</div><div><h3>Bachelor of Computer Engineering (Honours)</h3><p>University of New South Wales - 2021 to 2025</p></div></div></section>
+<section class="ct" id="contact"><p class="sl">Let's Connect</p><h2 class="st2">Ready to chat about data?</h2><p class="sd" style="margin:0 auto 36px">Open to data analyst, BI developer, and business analyst opportunities across Sydney and beyond.</p><div class="cl"><a href="mailto:dhruvgulwani@gmail.com">dhruvgulwani@gmail.com</a><a href="tel:+61411930283">0411 930 283</a><a href="https://linkedin.com/in/dhruv-gulwani-b12109238" target="_blank">LinkedIn</a><a href="https://github.com/dhruv-2013" target="_blank">GitHub</a></div></section>
+<footer>Dhruv Gulwani - Sydney, Australia - 2026</footer>
+</body>
+</html>
